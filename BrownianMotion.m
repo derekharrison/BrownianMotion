@@ -295,7 +295,12 @@ if colltime < dt
         ra = [X(PartnerA);Y(PartnerA)];va = [Vx(PartnerA);Vy(PartnerA)];
         rb = [X(PartnerB);Y(PartnerB)];vb = [Vx(PartnerB);Vy(PartnerB)];              
         n = (ra-rb)/sqrt((ra-rb)'*(ra-rb));
-        vab=[Vx(PartnerA)-Vx(PartnerB);Vy(PartnerA)-Vy(PartnerB)];     
+        vab=[Vx(PartnerA)-Vx(PartnerB);Vy(PartnerA)-Vy(PartnerB)];
+        wa = [Wx(PartnerA);Wy(PartnerA)];
+        wb = [Wx(PartnerB);Wy(PartnerB)];           
+        RiWi = Ri(PartnerA)*wa + Ri(PartnerB)*wb;
+        crossRiWin = cross([RiWi;0], [n;0]);
+        vab = vab - crossRiWin(1:2);
         
         B1 = 7/2*(1/mi(PartnerA)+1/mi(PartnerB));
         B2 = 1/mi(PartnerA)+1/mi(PartnerB);    
