@@ -39,7 +39,6 @@ fracfactor = 0.7;                   %Fraction factor. It is multiplied with maxf
 writevideo = 0;                     %Button for video. Set to 1 to generate video of simulation. Set to any other arbitrary number to prevent generation of video.
 Plot = 0;                           %Generate plot of simulation at everytimestep
 frameps = 120;                       %Set framerate (fps) for video
-
 %End adjustable parameters
 
 A = 4*Dwally*Dwallx;                %Area of system box
@@ -94,7 +93,6 @@ end
 %Multisimulation loop starts here
 for simc = 1:Ns
     %Generating initial velocities of all particles but particle 1
-    tic
     for i=2:Np
         Vox(i)=(2*rand-1)*Vixmax;
         Voy(i)=(2*rand-1)*Viymax;
@@ -102,7 +100,6 @@ for simc = 1:Ns
 
     %Generating Initial positions via Monte Carlo simulation for all particles
     %but particles 1
-    tic
     for i=2:Np 
         Xo(i) = (rand*2-1)*(Dwallx-Rpi*1.1);
         Yo(i) = (rand*2-1)*(Dwally-Rpi*1.1);
@@ -122,7 +119,6 @@ for simc = 1:Ns
             end
         end
     end
-    toc
 
     %Main simulation code starts here
     if Plot == 1
@@ -174,7 +170,6 @@ for simc = 1:Ns
         collisionwithwall = 0;
         collisionwithparticle = 0;
         colltimecounter = 0;
-        tic
         %Checking collision times and finding collision partner     
         for i=1:Np
             for j = i+1:Np
@@ -379,7 +374,6 @@ for simc = 1:Ns
                 writeVideo(writerObj,frame);
             end
         end
-        toc
         
     end%End of single simulation loop
 
@@ -389,7 +383,6 @@ for simc = 1:Ns
     Darray = zeros(size(timearray));
     dRsquare = zeros(size(timearray));
     DarrayL = zeros(size(timearray));
-    dimensions = 2;
     collpart1counter;
     timestepmin(simc) = timestep;
 
@@ -400,7 +393,7 @@ for simc = 1:Ns
     %Calculating diffusion coefficient
     for i = 2:timestep
         dRsquare(i,1) = (X1array(i)-X1array(1))^2+(Y1array(i)-Y1array(1))^2;
-        Darray(i,1) = ((X1array(i)-X1array(1))^2+(Y1array(i)-Y1array(1))^2)/2/dimensions/timearray(i);
+        Darray(i,1) = ((X1array(i)-X1array(1))^2+(Y1array(i)-Y1array(1))^2)/4/timearray(i);
     end
 
     %Interpolation
@@ -409,7 +402,6 @@ for simc = 1:Ns
     dRsquareint = interp1(timearray,dRsquare,timearrayint);
 
     dRaveragesum(1:Nts+1) = dRaveragesum(1:Nts+1) + dRsquareint;
-    toc
 end%End of Main multisimulation loop
 
 dRaverage = dRaveragesum/simc;
@@ -418,22 +410,22 @@ dRaverage = dRaverage(1:Nts+1);
 
 %Calculating average diffusion coefficient
 for i = 2:Nts+1
-    Darrayavg(i,1) = dRaverage(i)/2/dimensions/timearrayint(i);
+    Darrayavg(i,1) = dRaverage(i)/3/timearrayint(i);
 end
 
 %Plotting some data
 Dmean = mean(Darray);
 Dmeanavg = mean(Darrayavg);
 figure
-plot(timearray,dRsquare,timearray,2*Dmean*dimensions*timearray,timearrayint,dRaverage, timearrayint,2*Dmeanavg*dimensions*timearrayint)
+plot(timearray,dRsquare,timearray,4*Dmean*timearray,timearrayint,dRaverage, timearrayint,4*Dmeanavg*timearrayint)
 
 figure
-plot(timearrayint,dRaverage, timearrayint,2*Dmeanavg*dimensions*timearrayint)
+plot(timearrayint,dRaverage, timearrayint,4*Dmeanavg*timearrayint)
 
 %Export Data to excel
 A = [X1array,Y1array,timearray,Darray];
 B = [timearrayint,dRaverage,Darrayavg];
-filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim33Data.xlsx';
+filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim36Data.xlsx';
 xlswrite(filename,A,1,'A1:D25000')
 xlswrite(filename,B,2,'A1:C25000')
 
