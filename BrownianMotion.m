@@ -36,8 +36,8 @@ error=1e-25;                        %Small negligible number used in the denomin
 smallerr = 1e-5;                    %Number used for preventing particles from sticking with walls and from particles going through eachother (in case of identical collision times for various particles)
 maxfractionp=0.75;                  %Maximum area available for particles other than particle 1 (the large particle)
 fracfactor = 0.7;                   %Fraction factor. It is multiplied with maxfractionp to vary amount of particles placed in system. Note: High fractions lead to large Monte Carlo simulation times for generating initial particle positions
-writevideo = 1;                     %Button for video. Set to 1 to generate video of simulation. Set to any other arbitrary number to prevent generation of video.
-Plot = 1;                           %Generate plot of simulation at everytimestep
+writevideo = 0;                     %Button for video. Set to 1 to generate video of simulation. Set to any other arbitrary number to prevent generation of video.
+Plot = 0;                           %Generate plot of simulation at everytimestep
 frameps = 120;                       %Set framerate (fps) for video
 
 %End adjustable parameters
@@ -82,7 +82,6 @@ for i=2:Np
 end
 
 %Multisimulations start here
-dRaverage = zeros(Nts+5,1);
 dRaveragesum = zeros(Nts+5,1);
 timestepmin = zeros(Ns,1);
 
@@ -183,6 +182,7 @@ for simc = 1:Ns
                 rab =[X(i)-X(j);Y(i)-Y(j)];vab=[Vx(i)-Vx(j);Vy(i)-Vy(j)];vab2=vab'*vab;
                 if (i > 1) && (abs(X(i)-X(j)) < Nboxxi) && (abs(Y(i)-Y(j)) < Nboxyi)
                     Disc = (rab'*vab)^2-vab2*(rab'*rab-(Ri(i)+Ri(j))^2);
+                    %Check overlap
                     if sqrt(rab'*rab) < (Ri(i)+Ri(j))
                         Overlaparray(timestep) = Overlaparray(timestep)+1;
                     end
@@ -409,10 +409,10 @@ for simc = 1:Ns
     dRsquareint = interp1(timearray,dRsquare,timearrayint);
 
     dRaveragesum(1:Nts+1) = dRaveragesum(1:Nts+1) + dRsquareint;
-    dRaverage = dRaveragesum/simc;
     toc
 end%End of Main multisimulation loop
 
+dRaverage = dRaveragesum/simc;
 Darrayavg = zeros(size(timearrayint));
 dRaverage = dRaverage(1:Nts+1);
 
@@ -433,7 +433,7 @@ plot(timearrayint,dRaverage, timearrayint,2*Dmeanavg*dimensions*timearrayint)
 %Export Data to excel
 A = [X1array,Y1array,timearray,Darray];
 B = [timearrayint,dRaverage,Darrayavg];
-filename = 'C:\Users\d-w-h\Desktop\Home\Sim videos\BrownianMotionsim2dataavg.xlsx';
+filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim33Data.xlsx';
 xlswrite(filename,A,1,'A1:D25000')
 xlswrite(filename,B,2,'A1:C25000')
 
