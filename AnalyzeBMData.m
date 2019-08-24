@@ -1,6 +1,6 @@
 %Analysis of brownian motion simulation data in generated files
 tic
-Number_of_files = 40;
+Number_of_files = 60;
 filename_pre = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim';
 filename_pos = 'Data.xlsx';
 
