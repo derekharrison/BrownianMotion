@@ -410,7 +410,7 @@ dRaverage = dRaverage(1:Nts+1);
 
 %Calculating average diffusion coefficient
 for i = 2:Nts+1
-    Darrayavg(i,1) = dRaverage(i)/3/timearrayint(i);
+    Darrayavg(i,1) = dRaverage(i)/4/timearrayint(i);
 end
 
 %Plotting some data
@@ -425,7 +425,7 @@ plot(timearrayint,dRaverage, timearrayint,4*Dmeanavg*timearrayint)
 %Export Data to excel
 A = [X1array,Y1array,timearray,Darray];
 B = [timearrayint,dRaverage,Darrayavg];
-filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim36Data.xlsx';
+filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim48Data.xlsx';
 xlswrite(filename,A,1,'A1:D25000')
 xlswrite(filename,B,2,'A1:C25000')
 
