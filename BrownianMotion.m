@@ -5,7 +5,7 @@ clear
 clc
 tic
 
-%Parameters
+%Adjustable parameters
 ma=2.0;                               %Mass of particle 1 (the large particle)
 mpi=0.9;                            %Mass of particles other than particle 1
 Ra=0.7;                             %Radius of particle 1 (m)
@@ -41,6 +41,7 @@ Plot = 0;                           %Generate plot of simulation at everytimeste
 frameps = 120;                       %Set framerate (fps) for video
 %End adjustable parameters
 
+%Initialization
 A = 4*Dwally*Dwallx;                %Area of system box
 frac = maxfractionp*fracfactor;     %Fraction of available area for particles
 A1 = A - 4*pi*Ra^2;                 %Area of particles available for all particles but particle 1 (the large particle)
@@ -137,7 +138,6 @@ for simc = 1:Ns
         set(gca,'Xlim',[minX maxX])
     end
 
-    %Some parameters
     X = Xo;
     Y = Yo;
     Vx = Vox;
@@ -157,11 +157,14 @@ for simc = 1:Ns
     doubletimesarray = zeros(Nts*10,1);
     timearray = zeros(10*Nts,1);
     dtarray = zeros(10*Nts,1);
+    
     collpart1counter = 0;
     framecounter = 1;
+    
     Overlaparray = zeros(Nts*10,1);
     X1array = zeros(Nts*10,1);
     Y1array = zeros(Nts*10,1);
+    
     X1array(1) = X(1);
     Y1array(1) = Y(1);
 
@@ -170,6 +173,7 @@ for simc = 1:Ns
         collisionwithwall = 0;
         collisionwithparticle = 0;
         colltimecounter = 0;
+        
         %Checking collision times and finding collision partner     
         for i=1:Np
             for j = i+1:Np
@@ -375,7 +379,8 @@ for simc = 1:Ns
             end
         end
         
-    end%End of single simulation loop
+    end
+    %End of single simulation loop
 
     X1array = X1array(1:timestep);
     Y1array = Y1array(1:timestep);
@@ -425,7 +430,7 @@ plot(timearrayint,dRaverage, timearrayint,4*Dmeanavg*timearrayint)
 %Export Data to excel
 A = [X1array,Y1array,timearray,Darray];
 B = [timearrayint,dRaverage,Darrayavg];
-filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim48Data.xlsx';
+filename = 'C:\Users\d-w-h\Desktop\Home\Brownian Motion Simulation results\BrownianMotionSim53Data.xlsx';
 xlswrite(filename,A,1,'A1:D25000')
 xlswrite(filename,B,2,'A1:C25000')
 
